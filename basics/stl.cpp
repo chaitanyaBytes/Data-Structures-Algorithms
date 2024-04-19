@@ -47,7 +47,7 @@ void explainVector()
     cout << *(it) << " ";
 
     vector<int>::iterator it = v.end();
-    // vector<int>::iterator it = v.rend();
+    //vector<int>::iterator it = v.rend();
     // vector<int>::iterator it = v.rbegin();
 
     for (vector<int>::iterator it = v.begin(); it != v.end(); it++)

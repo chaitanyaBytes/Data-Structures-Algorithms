@@ -288,52 +288,6 @@ string read3(int n, vector<int> book, int target)
     return "NO";
 }
 
-/*sort colors: sort an array of 0's 1's and 2's
-approach: */
-void sortColors(vector<int> &arr)
-{
-    int n = arr.size();
-    int low = 0, mid = 0, high = n - 1;
-    while (mid <= high)
-    {
-        if (arr[mid] == 0)
-        {
-            swap(arr[low], arr[mid]);
-            low++;
-            mid++;
-        }
-        else if (arr[mid] == 1)
-        {
-            mid++;
-        }
-        else
-        {
-            swap(arr[mid], arr[high]);
-            high--;
-        }
-    }
-
-    // unordered_map<int, int> counts;
-    // for (int i = 0; i < nums.size(); i++)
-    // {
-    //     counts[nums[i]]++;
-    // }
-    // int cval = 0;
-    // for (int j = 0; j < nums.size(); j++)
-    // {
-    //     if (counts[cval] != 0)
-    //     {
-    //         nums[j] = cval;
-    //         counts[cval]--;
-    //     }
-    //     else
-    //     {
-    //         cval++;
-    //         j--;
-    //     }
-    // }
-}
-
 int main()
 {
     int n;

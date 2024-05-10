@@ -334,6 +334,50 @@ void sortColors(vector<int> &arr)
     // }
 }
 
+/*majority element in an array
+approach: Moore's voting algorithm.
+*/
+int majorityElement(vector<int> &nums)
+{
+    int n = nums.size();
+    int count = 0, el;
+    for (int i = 0; i < n; i++)
+    {
+        if (count == 0)
+        {
+            count++;
+            el = nums[i];
+        }
+        else if (nums[i] == el)
+            count++;
+        else
+            count--;
+    }
+    int cnt = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (nums[i] == el)
+            cnt++;
+    }
+    if (cnt > n / 2)
+        return el;
+    return -1;
+
+    // int n = v.size();
+    // unordered_map<int, int> hash;
+    // for (int i = 0; i < n; i++)
+    // {
+    //     hash[v[i]]++;
+    // }
+
+    // for (auto it : hash)
+    // {
+    //     if (it.second >= n / 2)
+    //         return it.first;
+    // }
+    // return -1;
+}
+
 int main()
 {
     int n;

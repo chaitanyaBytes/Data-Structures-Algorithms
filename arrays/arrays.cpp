@@ -3,7 +3,6 @@
 #include <set>
 #include <map>
 #include <algorithm>
-#include <bits/stdc++>
 using namespace std;
 
 // max element
@@ -271,7 +270,7 @@ vector<int> read2(int n, vector<int> book, int target)
 // optimised: 2 pointer approach. sort array. increment left if sum < target and decrement right if sum > target
 string read3(int n, vector<int> book, int target)
 {
-    // sort(book.begin(), book.end());
+    sort(book.begin(), book.end());
     int left = 0, right = n - 1;
     while (left < right)
     {
@@ -289,7 +288,17 @@ string read3(int n, vector<int> book, int target)
 }
 
 /*sort colors: sort an array of 0's 1's and 2's
-approach: */
+approach: Dutch national flag algirthm
+3 pointers: low, mid, high. arr[0….low-1] contains 0. [Extreme left part],
+arr[low….mid-1] contains 1, arr[high+1….n-1] contains 2. [Extreme right part]
+arr[0….low-1] contains 0. [Extreme left part]
+arr[low….mid-1] contains 1.
+arr[high+1….n-1] contains 2. [Extreme right part], n = size of the array
+The middle part arr[mid….high] is the unsorted segment.
+If arr[mid] == 0, swap arr[low], arr[mid]. increment low and mid.
+if arr[mid] == 1, increment mid.
+if arr[mid] == 2, swap arr[mid], arr[high], decrement high
+*/
 void sortColors(vector<int> &arr)
 {
     int n = arr.size();
@@ -378,6 +387,25 @@ int majorityElement(vector<int> &nums)
     // return -1;
 }
 
+/*maxiumum subarray sum
+approach: kadane's algorithm: A subarray with a sum less than 0 will always reduce our 
+answer and so this type of subarray cannot be a part of the subarray with maximum sum.
+
+*/
+int maxSubArray(vector<int> &nums)
+{
+    long long sum = 0, maxi = INT_MIN;
+    int n = nums.size();
+    for (int i = 0; i < n; i++)
+    {
+        sum += nums[i];
+        maxi = max(sum, maxi);
+        if (sum < 0)
+            sum = 0;
+    }
+    return maxi;
+}
+
 int main()
 {
     int n;
@@ -390,7 +418,8 @@ int main()
     for (int i = 0; i < n; i++)
         cin >> arr[i];
 
-    string result = read1(n, arr, target);
+    string result = read3(n, arr, target);
+    cout << result;
 
     return 0;
 }

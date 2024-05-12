@@ -388,13 +388,12 @@ int majorityElement(vector<int> &nums)
 }
 
 /*maxiumum subarray sum
-approach: kadane's algorithm: A subarray with a sum less than 0 will always reduce our 
+approach: kadane's algorithm: A subarray with a sum less than 0 will always reduce our
 answer and so this type of subarray cannot be a part of the subarray with maximum sum.
-
 */
 int maxSubArray(vector<int> &nums)
 {
-    long long sum = 0, maxi = INT_MIN;
+    long long sum = 0, maxi = -10000;
     int n = nums.size();
     for (int i = 0; i < n; i++)
     {
@@ -406,19 +405,54 @@ int maxSubArray(vector<int> &nums)
     return maxi;
 }
 
+/*Best Time to Buy and Sell Stock
+approach: */
+int maxProfit(vector<int> &prices)
+{
+    int buy = prices[0], profit = 0, n = prices.size();
+    for (int i = 0; i < n; i++)
+    {
+        profit = max(profit, prices[i] - buy);
+        buy = min(buy, prices[i]);
+    }
+    return profit;
+}
+
+/*rearragnge elements by sign alternativeley
+approach: starting index of first pos and neg number is 0 and 1 respectively.
+now iterate through given array and if a positive number is encountered, store it in
+new array at current posIndex and increment it by 2. similar for neg index.*/
+vector<int> rearrangeArray(vector<int> &nums)
+{
+    vector<int> ans(nums.size());
+    int posindex = 0;
+    int negindex = 1;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] < 0)
+        {
+            ans[negindex] = nums[i];
+            negindex += 2;
+        }
+        else
+        {
+            ans[posindex] = nums[i];
+            posindex += 2;
+        }
+    }
+    return ans;
+}
+
 int main()
 {
     int n;
     cin >> n;
 
-    int target;
-    cin >> target;
-
     vector<int> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
 
-    string result = read3(n, arr, target);
+    int result = maxSubArray(arr);
     cout << result;
 
     return 0;

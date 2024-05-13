@@ -3,6 +3,7 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <unordered_set>
 using namespace std;
 
 // max element
@@ -443,6 +444,108 @@ vector<int> rearrangeArray(vector<int> &nums)
     return ans;
 }
 
+/*next permutation**
+approach: Find the break-point, i: Break-point means the first index i from the back of
+the given array where arr[i] > arr[i+1].
+If such a break-point does not exist i.e. if the array is sorted in decreasing order.
+If a break-point exists:
+Find the smallest number i.e. > arr[i] and in the right half of index i(i.e. from index i+1 to n-1) and swap it with arr[i].
+Reverse the entire right half(i.e. from index i+1 to n-1) of index i. And finally, return the array.*/
+void nextPermutation(vector<int> &nums)
+{
+    int ind = -1, n = nums.size();
+    for (int i = n - 2; i >= 0; i--)
+    {
+        if (nums[i] < nums[i + 1])
+        {
+            ind = i;
+            break;
+        }
+    }
+    if (ind == -1)
+    {
+        reverse(nums.begin(), nums.end());
+        return;
+    }
+    for (int i = n - 1; i > ind; i--)
+    {
+        if (nums[i] > nums[ind])
+        {
+            swap(nums[i], nums[ind]);
+            break;
+        }
+    }
+    reverse(nums.begin() + ind + 1, nums.end());
+}
+
+/*find leaders in an array
+Approach: */
+vector<int> leaders(int arr[], int n)
+{
+    vector<int> leaders;
+    int maxi = INT_MIN;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        if (arr[i] >= maxi)
+        {
+            maxi = max(arr[i], maxi);
+            leaders.push_back(maxi);
+        }
+    }
+    reverse(leaders.begin(), leaders.end());
+    return leaders;
+}
+
+/*longest consecutive sequence*/
+int longestConsecutive(vector<int> &nums)
+{
+    // optimmal
+    unordered_set<int> st;
+    if (nums.size() == 0)
+        return 0;
+    int longest = 1;
+    for (int i = 0; i < nums.size(); i++)
+        st.insert(nums[i]);
+
+    for (auto it : st)
+    {
+        if (st.find(it - 1) == st.end())
+        {
+            int cnt = 1;
+            int x = it;
+            while (st.find(x + 1) != st.end())
+            {
+                cnt++;
+                x++;
+            }
+            longest = max(longest, cnt);
+        }
+    }
+    return longest;
+
+    // better
+    int longest = 1;
+    int count = 1;
+    if (nums.size() == 0)
+        return 0;
+    sort(nums.begin(), nums.end());
+    for (int i = 1; i < nums.size(); i++)
+    {
+        if (nums[i] != nums[i - 1])
+        {
+            if (nums[i] - nums[i - 1] == 1)
+            {
+                count++;
+            }
+            else
+            {
+                longest = max(longest, count);
+                count = 1;
+            }
+        }
+    }
+    return max(longest, count);
+}
 int main()
 {
     int n;

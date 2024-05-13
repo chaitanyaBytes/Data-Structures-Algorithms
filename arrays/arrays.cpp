@@ -496,7 +496,12 @@ vector<int> leaders(int arr[], int n)
     return leaders;
 }
 
-/*longest consecutive sequence*/
+/*longest consecutive sequence
+approach: put all the array elements into the set data structure.If a number, num,
+is a starting number, ideally, num-1 should not exist. So, for every element, x, in the set,
+we will check if x-1 exists inside the set. :
+If x-1 exists: x cannot be a starting number and move on to the next element in the set.
+If x-1 does not exist: x is a starting number of a sequence. So, for number, x, we will start finding the consecutive elements.*/
 int longestConsecutive(vector<int> &nums)
 {
     // optimmal
@@ -546,6 +551,68 @@ int longestConsecutive(vector<int> &nums)
     }
     return max(longest, count);
 }
+
+/*rotate matrix by 90 degrees
+approach:
+brute: when rotating we can observe that [i][j] --> [j][n-1-j]
+optimal: take transpose and then reverse every row*/
+void rotate(vector<vector<int>> &matrix)
+{
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        for (int j = i; j < matrix.size(); j++)
+        {
+            swap(matrix[j][i], matrix[i][j]);
+        }
+    }
+
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        reverse(matrix[i].begin(), matrix[i].end());
+    }
+}
+
+/*spiral matrix*/
+vector<int> spiralOrder(vector<vector<int>> &matrix)
+{
+    int n = matrix.size();
+    int m = matrix[0].size();
+    vector<int> ans;
+    int top = 0, left = 0, right = m - 1, bottom = n - 1;
+
+    while (left <= right && top <= bottom)
+    {
+        for (int i = left; i <= right; i++)
+        {
+            ans.push_back(matrix[top][i]);
+        }
+        top++;
+        for (int i = top; i <= bottom; i++)
+        {
+            ans.push_back(matrix[i][right]);
+        }
+
+        right--;
+        if (top <= bottom)
+        {
+            for (int i = right; i >= left; i--)
+            {
+                ans.push_back(matrix[bottom][i]);
+            }
+        }
+        bottom--;
+        if (left <= right)
+        {
+            for (int i = bottom; i >= top; i--)
+            {
+                ans.push_back(matrix[i][left]);
+            }
+        }
+        left++;
+    }
+    return ans;
+}
+
 int main()
 {
     int n;

@@ -346,6 +346,10 @@ void sortColors(vector<int> &arr)
 
 /*majority element in an array
 approach: Moore's voting algorithm.
+If the array contains a majority element, its occurrence must be greater than the 
+floor(N/2). Now, we can say that the count of minority elements and majority elements 
+is equal up to a certain point in the array. So when we traverse through the array we 
+try to keep track of the count of elements and the element itself for which we are tracking the count. 
 */
 int majorityElement(vector<int> &nums)
 {
@@ -483,7 +487,7 @@ Approach: */
 vector<int> leaders(int arr[], int n)
 {
     vector<int> leaders;
-    int maxi = INT_MIN;
+    int maxi = -1000000;
     for (int i = n - 1; i >= 0; i--)
     {
         if (arr[i] >= maxi)
@@ -529,7 +533,7 @@ int longestConsecutive(vector<int> &nums)
     return longest;
 
     // better
-    int longest = 1;
+    int longestt = 1;
     int count = 1;
     if (nums.size() == 0)
         return 0;
@@ -544,12 +548,12 @@ int longestConsecutive(vector<int> &nums)
             }
             else
             {
-                longest = max(longest, count);
+                longestt = max(longestt, count);
                 count = 1;
             }
         }
     }
-    return max(longest, count);
+    return max(longestt, count);
 }
 
 /*rotate matrix by 90 degrees
@@ -613,17 +617,90 @@ vector<int> spiralOrder(vector<vector<int>> &matrix)
     return ans;
 }
 
+/*pascal Triangle*/
+vector<vector<int>> generate(int numRows)
+{
+    vector<vector<int>> pascal(numRows, vector<int>(numRows, 1));
+    for (int i = 0; i < numRows; i++)
+    {
+        for (int j = 1; j < i; j++)
+        {
+            pascal[i][j] = pascal[i - 1][j - 1] + pascal[i - 1][j];
+        }
+        pascal[i].erase(pascal[i].begin() + i + 1, pascal[i].end());
+    }
+    return pascal;
+}
+
+/*majority element in array > n/3
+If the array contains the majority of elements, their occurrence must be greater than 
+the floor(N/3). Now, we can say that the count of minority elements and majority elements 
+is equal up to a certain point in the array. So when we traverse through the array we try 
+to keep track of the counts of elements and the elements themselves for which we are tracking the counts.*/
+vector<int> majorityElementt(vector<int> &nums)
+{
+    int cnt1 = 0, cnt2 = 0, el1, el2;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (cnt1 == 0 && el2 != nums[i])
+        {
+            cnt1++;
+            el1 = nums[i];
+        }
+        else if (cnt2 == 0 && el1 != nums[i])
+        {
+            cnt2++;
+            el2 = nums[i];
+        }
+        else if (nums[i] == el1)
+            cnt1++;
+        else if (nums[i] == el2)
+            cnt2++;
+        else
+        {
+            cnt1--;
+            cnt2--;
+        }
+    }
+    int count1 = 0, count2 = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] == el1)
+        {
+            count1++;
+        }
+        else if (nums[i] == el2)
+        {
+            count2++;
+        }
+    }
+    vector<int> ans;
+    if (count1 > nums.size() / 3)
+        ans.push_back(el1);
+    if (count2 > nums.size() / 3)
+        ans.push_back(el2);
+    return ans;
+}
+
+
 int main()
 {
     int n;
     cin >> n;
 
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
+    // vector<int> arr(n);
+    // for (int i = 0; i < n; i++)
+    //     cin >> arr[i];
 
-    int result = maxSubArray(arr);
-    cout << result;
+    vector<vector<int>> result = generate(n);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << result[i][j] << " ";
+        }
+        cout << "\n";
+    }
 
     return 0;
 }

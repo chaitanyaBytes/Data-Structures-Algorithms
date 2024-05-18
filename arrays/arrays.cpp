@@ -346,10 +346,10 @@ void sortColors(vector<int> &arr)
 
 /*majority element in an array
 approach: Moore's voting algorithm.
-If the array contains a majority element, its occurrence must be greater than the 
-floor(N/2). Now, we can say that the count of minority elements and majority elements 
-is equal up to a certain point in the array. So when we traverse through the array we 
-try to keep track of the count of elements and the element itself for which we are tracking the count. 
+If the array contains a majority element, its occurrence must be greater than the
+floor(N/2). Now, we can say that the count of minority elements and majority elements
+is equal up to a certain point in the array. So when we traverse through the array we
+try to keep track of the count of elements and the element itself for which we are tracking the count.
 */
 int majorityElement(vector<int> &nums)
 {
@@ -633,9 +633,9 @@ vector<vector<int>> generate(int numRows)
 }
 
 /*majority element in array > n/3
-If the array contains the majority of elements, their occurrence must be greater than 
-the floor(N/3). Now, we can say that the count of minority elements and majority elements 
-is equal up to a certain point in the array. So when we traverse through the array we try 
+If the array contains the majority of elements, their occurrence must be greater than
+the floor(N/3). Now, we can say that the count of minority elements and majority elements
+is equal up to a certain point in the array. So when we traverse through the array we try
 to keep track of the counts of elements and the elements themselves for which we are tracking the counts.*/
 vector<int> majorityElementt(vector<int> &nums)
 {
@@ -682,6 +682,135 @@ vector<int> majorityElementt(vector<int> &nums)
     return ans;
 }
 
+/*3 sum
+better approach: hashing*/
+vector<vector<int>> threeSum(vector<int> &nums)
+{
+    set<vector<int>> st;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        set<int> hashset;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            int third = -(nums[i] + nums[j]);
+            if (hashset.find(third) != hashset.end())
+            {
+                vector<int> temp = {nums[i], nums[j], third};
+                sort(temp.begin(), temp.end());
+                st.insert(temp);
+            }
+            hashset.insert(nums[j]);
+        }
+    }
+    vector<vector<int>> ans(st.begin(), st.end());
+    return ans;
+}
+/*optimal: 2 pointer approach.
+sort the array. fix i. and set j as i+1 and k as n-1. j and k will move. if sum is greater/smaller
+than 0, k/j will move backward/forward. if sum == 0, then push it in result vector and move j and k
+until current element is not equal to prev element.*/
+vector<vector<int>> threeSumm(vector<int> &nums)
+{
+    vector<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (i > 0 && nums[i] == nums[i - 1])
+            continue;
+        int j = i + 1, k = nums.size() - 1;
+        while (j < k)
+        {
+            int sum = nums[i] + nums[j] + nums[k];
+            if (sum == 0)
+            {
+                vector<int> temp = {nums[i], nums[j], nums[k]};
+                ans.push_back(temp);
+                j++;
+                k--;
+                while (j < k && nums[j] == nums[j - 1])
+                    j++;
+                while (j < k && nums[k] == nums[k + 1])
+                    k--;
+            }
+            else if (sum < 0)
+                j++;
+            else
+                k--;
+        }
+    }
+    return ans;
+}
+
+/*4 sum*/
+// better: hashing approach
+vector<vector<int>> fourSumm(vector<int> &nums, int target)
+{
+    set<vector<int>> st;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            set<long long> hashset;
+            for (int k = j + 1; k < nums.size(); k++)
+            {
+                long long sum = nums[i] + nums[j];
+                sum += nums[k];
+                long long rem = target - sum;
+                if (hashset.find(rem) != hashset.end())
+                {
+                    vector<int> temp = {nums[i], nums[j], nums[k], (int)rem};
+                    sort(temp.begin(), temp.end());
+                    st.insert(temp);
+                }
+                hashset.insert(nums[k]);
+            }
+        }
+    }
+    vector<vector<int>> ans(st.begin(), st.end());
+    return ans;
+}
+// optimal: two pointer approach
+vector<vector<int>> fourSum(vector<int> &nums, int target)
+{
+    vector<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (i > 0 && nums[i] == nums[i - 1])
+            continue;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (j > i + 1 && nums[j] == nums[j - 1])
+                continue;
+            int k = j + 1, l = nums.size() - 1;
+            while (k < l)
+            {
+                long long sum = nums[i] + nums[j];
+                sum += nums[k] + nums[l];
+                if (sum < target)
+                {
+                    k++;
+                }
+                else if (sum > target)
+                {
+                    l--;
+                }
+                else
+                {
+                    vector<int> temp = {nums[i], nums[j], nums[k], nums[l]};
+                    ans.push_back(temp);
+                    k++;
+                    l--;
+                    while (k < l && nums[k] == nums[k - 1])
+                        k++;
+                    while (k < l && nums[l] == nums[l + 1])
+                        l--;
+                }
+            }
+        }
+    }
+    return ans;
+}
 
 int main()
 {

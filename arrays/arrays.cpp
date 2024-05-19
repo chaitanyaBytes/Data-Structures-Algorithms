@@ -169,13 +169,10 @@ int missingNumber(vector<int> &nums)
 {
     // // xor approach
     // int result = nums.size();
-    // int i = 0;
-
-    // for (int num : nums)
+    // for (int i = 0; i < nums.size(); i++)
     // {
-    //     result ^= num;
+    //     result ^= nums[i];
     //     result ^= i;
-    //     i++;
     // }
     // return result;
 
@@ -879,7 +876,94 @@ void merge(vector<int> &nums1, int m, vector<int> &nums2, int n)
     }
 }
 
-/**/
+/*Find the repeating and missing numbers from array*/
+vector<int> findTwoElement(vector<int> arr, int n)
+{
+    // hashing
+    vector<int> hash(n + 1);
+    for (int i = 0; i < n; i++)
+    {
+        hash[arr[i]]++;
+    }
+    int repeat = 0;
+    int missing = 0;
+    for (int i = 1; i < n + 1; i++)
+    {
+        if (hash[i] == 0)
+        {
+            missing = i;
+        }
+        else if (hash[i] == 2)
+        {
+            repeat = i;
+        }
+    }
+    return {repeat, missing};
+
+    // summation approach
+    long long s1 = n * (n + 1) / 2;
+    long long s12 = n * (n + 1) * (2 * n + 1) / 6;
+    long long s2 = 0, s22 = 0;
+    for (int i = 0; i < n; i++)
+    {
+        s2 += arr[i];
+        s22 += (long long)arr[i] * (long long)arr[i];
+    }
+    long long val1 = s2 - s1; // x - y
+    long long val2 = s22 - s12;
+    val2 /= val1; // x + y
+    long long x = (val1 + val2) / 2;
+    long long y = x - val1;
+    return {(int)x, (int)y}; // {repeating, missing}
+
+    // xor approach
+    int xr = 0;
+    for (int i = 0; i < n; i++)
+    {
+        xr = xr ^ arr[i];
+        xr = xr ^ (i + 1);
+    }
+
+    int number = (xr & ~(xr - 1));
+
+    int zero = 0;
+    int one = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if ((arr[i] & number) != 0)
+        {
+            one = one ^ arr[i];
+        }
+        else
+        {
+            zero = zero ^ arr[i];
+        }
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        if ((i & number) != 0)
+        {
+
+            one = one ^ i;
+        }
+        else
+        {
+
+            zero = zero ^ i;
+        }
+    }
+
+    int cnt = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] == zero)
+            cnt++;
+    }
+    if (cnt == 2)
+        return {zero, one};
+    return {one, zero};
+}
 
 int main()
 {

@@ -812,6 +812,75 @@ vector<vector<int>> fourSum(vector<int> &nums, int target)
     return ans;
 }
 
+/*merge overlappinng intervals
+Approach: push the first interval in ans vector. iterate through other intervals. If upper bound of
+last interval inserted in ans vector is greater than current interval's lower bound then update the
+upper bound of interval in ans to max of itself or current interval's upper bound. else push the
+current interval in the ans vector. */
+vector<vector<int>> merge(vector<vector<int>> &intervals)
+{
+    vector<vector<int>> ans;
+    sort(intervals.begin(), intervals.end());
+    for (int i = 0; i < intervals.size(); i++)
+    {
+        int start = intervals[i][0];
+        int end = intervals[i][1];
+        if (!ans.empty() && end <= ans.back()[1])
+            continue;
+        for (int j = i + 1; j < intervals.size(); j++)
+        {
+            if (intervals[j][0] <= end)
+            {
+                end = max(end, intervals[j][1]);
+            }
+            else
+            {
+                break;
+            }
+        }
+        ans.push_back({start, end});
+    }
+    return ans;
+
+    // optimmised:
+    vector<vector<int>> ans;
+    sort(intervals.begin(), intervals.end());
+    ans.push_back(intervals[0]);
+    for (int i = 1; i < intervals.size(); i++)
+    {
+        if (ans.back()[1] >= intervals[i][0])
+        {
+            ans.back()[1] = max(ans.back()[1], intervals[i][1]);
+        }
+        else
+        {
+            ans.push_back(intervals[i]);
+        }
+    }
+    return ans;
+}
+
+/*merge 2 sorted arrays without usinf extra space*/
+void merge(vector<int> &nums1, int m, vector<int> &nums2, int n)
+{
+    int i = m - 1;
+    int j = n - 1;
+    int k = m + n - 1;
+    while (j >= 0)
+    {
+        if (i >= 0 && nums1[i] > nums2[j])
+        {
+            nums1[k--] = nums1[i--];
+        }
+        else
+        {
+            nums1[k--] = nums2[j--];
+        }
+    }
+}
+
+/**/
+
 int main()
 {
     int n;

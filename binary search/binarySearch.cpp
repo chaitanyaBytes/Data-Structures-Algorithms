@@ -410,13 +410,17 @@ int NthRoot(int n, int m)
     return pow(high, n) == m ? high : -1;
 }
 
-/**/
-int findMax(vector<int> &piles)
+/*koko eats bananas
+approach: calculate the total time(required to consume all the bananas in the array)
+i.e. totalH using the function calculateTotalHours(a[], mid).
+If totalH <= h:  we will eliminate the right half and consider the left half(i.e. high = mid-1).
+otherwise, we will eliminate the left half and consider the right half(i.e. low = mid+1).*/
+int findMax(vector<int> &arr)
 {
     int ans = -100000;
-    for (int i = 0; i < piles.size(); i++)
+    for (int i = 0; i < arr.size(); i++)
     {
-        ans = max(ans, piles[i]);
+        ans = max(ans, arr[i]);
     }
     return ans;
 }
@@ -440,6 +444,64 @@ int minEatingSpeed(vector<int> &piles, int h)
             high = mid - 1;
         else
             low = mid + 1;
+    }
+    return low;
+
+    // int l = 1, r = 1000000000;
+    //     while (l < r) {
+    //         int m = (l + r) / 2, total = 0;
+    //         for (int p : piles)
+    //             total += (p + m - 1) / m;
+    //         if (total > h)
+    //             l = m + 1;
+    //         else
+    //             r = m;
+    //     }
+    //     return l;
+}
+
+/*minimum days to make m bouquets
+Approach: we have to check from min[arr] to max[arr]. if making required bouquets is possible for
+at a day then for all days ahead of it will be of no use and we can eleminate that half.
+else we can eleminate left half as if bouquets cant be made on that day then previous days are also useless*/
+int findMinn(vector<int> &arr)
+{
+    int ans = 100000000;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        ans = min(ans, arr[i]);
+    }
+    return ans;
+}
+int possible(vector<int> &arr, int day, int m, int k)
+{
+    int cnt = 0, bouquets = 0;
+    for (int a : arr)
+    {
+        if (a <= day)
+            cnt++;
+        else
+        {
+            bouquets += cnt / k;
+            cnt = 0;
+        }
+    }
+    bouquets += cnt / k;
+    return bouquets;
+}
+int minDays(vector<int> &bloomDay, int m, int k)
+{
+    if ((long long)m * k > (long long)bloomDay.size())
+        return -1;
+    int low = findMinn(bloomDay);
+    int high = findMax(bloomDay);
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (possible(bloomDay, mid, m, k) < m)
+            low = mid + 1;
+        else
+            high = mid - 1;
     }
     return low;
 }

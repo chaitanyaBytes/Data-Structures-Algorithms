@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <math.h>
 using namespace std;
 
 /*binary search*/
@@ -148,7 +149,7 @@ First, we identify the sorted half of the array.
 Once found, we determine if the target is located within this sorted half.
 If not, we eliminate that half from further consideration. else eliminate other half
 */
-int search(vector<int> &nums, int target)
+int searchh(vector<int> &nums, int target)
 {
     int low = 0, high = nums.size() - 1;
     while (low <= high)
@@ -240,7 +241,7 @@ Approach: if both sides of an array are sorted then the leftmost index has the m
 int findMin(vector<int> &nums)
 {
     int low = 0, high = nums.size() - 1;
-    int ans = INT_MAX;
+    int ans = 10000000;
     while (low <= high)
     {
         int mid = low + (high - low) / 2;
@@ -372,20 +373,91 @@ int findPeakElement(vector<int> &nums)
     // }
 }
 
+/*find square root*/
+long long int floorSqrt(long long int x)
+{
+    long long int low = 1, high = x;
+    while (low <= high)
+    {
+        long long int mid = low + (high - low) / 2;
+        if (mid * mid > x)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            low = mid + 1;
+        }
+    }
+    return high;
+}
+/*finding nth root of int m*/
+int NthRoot(int n, int m)
+{
+    int low = 1, high = m;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (pow(mid, n) <= m)
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+    return pow(high, n) == m ? high : -1;
+}
+
+/**/
+int findMax(vector<int> &piles)
+{
+    int ans = -100000;
+    for (int i = 0; i < piles.size(); i++)
+    {
+        ans = max(ans, piles[i]);
+    }
+    return ans;
+}
+int findHours(vector<int> &piles, int speed)
+{
+    int totalHours = 0;
+    for (int i = 0; i < piles.size(); i++)
+    {
+        totalHours += ((piles[i] + speed - 1) / speed);
+    }
+    return totalHours;
+}
+int minEatingSpeed(vector<int> &piles, int h)
+{
+    int low = 0, high = findMax(piles);
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        int totalHours = findHours(piles, mid);
+        if (totalHours <= h)
+            high = mid - 1;
+        else
+            low = mid + 1;
+    }
+    return low;
+}
+
 int main()
 {
-    int n;
-    cin >> n;
+    int n, h;
+    cin >> n >> h;
 
     vector<int> arr;
-    for (int i = 1; i < n; i++)
+    for (int i = 1; i <= n; i++)
     {
         int ele;
         cin >> ele;
         arr.push_back(ele);
     }
 
-    int bs = search(arr, 9);
+    int bs = minEatingSpeed(arr, h);
     cout << bs;
 
     return 0;

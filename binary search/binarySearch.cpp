@@ -506,6 +506,31 @@ int minDays(vector<int> &bloomDay, int m, int k)
     return low;
 }
 
+/*find the smallest divisor given a threshold. find max number that on dividing the whole array with
+gives a sum <= threshold*/
+int calculateSum(vector<int> &nums, int divisor)
+{
+    int sum = 0;
+    for (int num : nums)
+    {
+        sum += (num + divisor - 1) / divisor;
+    }
+    return sum;
+}
+int smallestDivisor(vector<int> &nums, int threshold)
+{
+    int low = 1, high = findMax(nums);
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (calculateSum(nums, mid) > threshold)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return low;
+}
+
 int main()
 {
     int n, h;

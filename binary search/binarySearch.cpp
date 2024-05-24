@@ -531,6 +531,86 @@ int smallestDivisor(vector<int> &nums, int threshold)
     return low;
 }
 
+/*capacity to ship packages within D days
+Approach: keep adding the weights[i] to load (initially 0). if the load + weights[i] > capacity then
+increment the no. of days required and resest the load. if number of days calculated <= day you get the answer*/
+int findSum(vector<int> &arr)
+{
+    int sum = 0;
+    for (int a : arr)
+    {
+        sum += a;
+    }
+    return sum;
+}
+int calculateDays(vector<int> &weights, int capacity)
+{
+    int day = 1;
+    int load = 0;
+    for (int i = 0; i < weights.size(); i++)
+    {
+        if (load + weights[i] > capacity)
+        {
+            day++;
+            load = weights[i];
+        }
+        else
+        {
+            load += weights[i];
+        }
+    }
+    return day;
+}
+int shipWithinDays(vector<int> &weights, int days)
+{
+    int low = findMax(weights), high = findSum(weights);
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (calculateDays(weights, mid) > days)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return low;
+}
+
+/**/
+bool findNum(vector<int> &arr, int ele)
+{
+    int low = 0, high = arr.size() - 1;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == ele)
+            return true;
+        if (arr[mid] < ele)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return false;
+}
+int findKthPositive(vector<int> &arr, int k)
+{
+    int count = 0;
+    for (int i = 1; i <= 2002; i++)
+    {
+        if (count == k)
+        {
+            return i - 1;
+        }
+        if (findNum(arr, i))
+        {
+            continue;
+        }
+        else
+        {
+            count++;
+        }
+    }
+    return -1;
+}
 int main()
 {
     int n, h;
@@ -544,7 +624,7 @@ int main()
         arr.push_back(ele);
     }
 
-    int bs = minEatingSpeed(arr, h);
+    int bs = shipWithinDays(arr, h);
     cout << bs;
 
     return 0;
